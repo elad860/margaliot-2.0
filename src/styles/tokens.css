@@ -1,0 +1,228 @@
+/*
+ * tokens.css — Margaliot design tokens (task T05).
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────┐
+ * │ PHASE 1 PLACEHOLDER VALUES — NOT AN APPROVED DESIGN.                     │
+ * │ Colours are neutral wireframe values derived from the existing brand     │
+ * │ (navy / turquoise / gold, owner decision 2026-11-02, "Phase 1 basic      │
+ * │ clean look"). The Phase 2 Premium direction and docs/design/             │
+ * │ DESIGN-SYSTEM.md replace the values of LAYER 1 (and, where the Design    │
+ * │ System says so, LAYER 3). Components never change when values change.    │
+ * └──────────────────────────────────────────────────────────────────────────┘
+ *
+ * Three layers:
+ *   1. Primitives  (--mg-palette-*, --mg-font-family-*, raw scales)
+ *        Raw values. The ONLY place colour literals are allowed in src/.
+ *   2. Semantic    (--mg-color-*, --mg-font-*, --mg-text-*, --mg-space-* …)
+ *        What components use, by role. Point at primitives.
+ *   3. Character   ([data-character="…"])
+ *        Per-template accent overrides of semantic tokens (home, information,
+ *        trip, activity, library, legal). Set on a template's root element.
+ *
+ * Naming: every token starts with --mg- so it never collides with Tailwind's
+ * own theme variables. styles/theme.css maps Tailwind names (bg-surface,
+ * text-accent, ps-4 …) onto these tokens. In plain CSS use var(--mg-…).
+ *
+ * Shared constants from docs/design/directions/README.md (12-column grid,
+ * max width ~1200px, breakpoints 390/768/1024/1440, spacing 4–96, body 17px,
+ * tap targets ≥ 44px, motion 200–500ms) are tokenised here. Status: [המלצה]
+ * until the Design System is approved.
+ *
+ * Contrast (WCAG AA) of the placeholder pairs, checked 2026-11-02:
+ *   text on bg 14.7 · text on surface 13.6 · muted on bg 7.1 · link on bg 7.7
+ *   cta-text on cta-bg 14.7 · accent on bg 5.5 · focus ring on bg 5.5 (≥ 3)
+ *   focus-ring-inverse on navy 7.3 · border-strong on bg 4.2 (≥ 3)
+ *   decor gold on bg 2.4 → decoration only, never text or meaningful UI.
+ * Character surfaces: trip accent on its surface 6.5 · activity accent on its
+ *   surface 5.6 · muted text on both ≥ 5.9 · focus ring on both ≥ 4.6.
+ */
+
+:root {
+  /* ─── LAYER 1 · PRIMITIVES (placeholder) ─────────────────────────────── */
+
+  /* Navy — brand ink (logo blue) */
+  --mg-palette-navy-950: #0b1a33;
+  --mg-palette-navy-900: #13284a;
+  --mg-palette-navy-700: #2b4168;
+  --mg-palette-navy-600: #45597d;
+  --mg-palette-navy-500: #6b7c99;
+  --mg-palette-navy-200: #c9d1dd;
+  --mg-palette-navy-100: #e4e8ef;
+  --mg-palette-navy-50: #f4f6f9;
+
+  /* Turquoise — brand accent */
+  --mg-palette-turquoise-800: #0d5c66;
+  --mg-palette-turquoise-700: #137482;
+  --mg-palette-turquoise-300: #5cc6cf;
+  --mg-palette-turquoise-100: #dcf0f2;
+
+  /* Gold — brand decoration (logo diamond); 500 is never used for text */
+  --mg-palette-gold-800: #735819;
+  --mg-palette-gold-700: #8a6a22;
+  --mg-palette-gold-500: #c9a24a;
+  --mg-palette-gold-100: #f5ecd5;
+
+  --mg-palette-white: #ffffff;
+
+  /* Type families — system Hebrew stacks until fonts.ts loads approved fonts */
+  --mg-font-family-sans: system-ui, -apple-system, 'Segoe UI', 'Arial Hebrew', Arial, sans-serif;
+  --mg-font-family-display: var(--mg-font-family-sans);
+
+  /* Type scale (rem; root 16px). Body 17px. Ratio ≈ 1.2 */
+  --mg-size-text-sm: 0.9375rem; /* 15px */
+  --mg-size-text-md: 1.0625rem; /* 17px */
+  --mg-size-text-lg: 1.25rem; /* 20px */
+  --mg-size-text-xl: 1.5rem; /* 24px */
+  --mg-size-text-2xl: 1.875rem; /* 30px */
+  --mg-size-text-3xl: 2.375rem; /* 38px */
+  --mg-size-text-4xl: 3rem; /* 48px */
+
+  /* Spacing unit: 4px. Steps are named by multiple (space-4 = 16px). */
+  --mg-space-unit: 0.25rem;
+
+  /* Radii and elevation */
+  --mg-size-radius-sm: 0.25rem;
+  --mg-size-radius-md: 0.5rem;
+  --mg-size-radius-lg: 1rem;
+  --mg-size-radius-pill: 999rem;
+
+  /* Motion */
+  --mg-time-fast: 200ms;
+  --mg-time-base: 300ms;
+  --mg-time-slow: 500ms;
+  --mg-curve-standard: cubic-bezier(0.2, 0, 0, 1);
+  --mg-curve-exit: cubic-bezier(0.3, 0, 1, 1);
+
+  /* ─── LAYER 2 · SEMANTIC (what components use) ───────────────────────── */
+
+  /* Colour roles */
+  --mg-color-bg: var(--mg-palette-white);
+  --mg-color-surface: var(--mg-palette-navy-50);
+  --mg-color-surface-raised: var(--mg-palette-white);
+  --mg-color-surface-inverse: var(--mg-palette-navy-900);
+  --mg-color-text: var(--mg-palette-navy-900);
+  --mg-color-text-muted: var(--mg-palette-navy-600);
+  --mg-color-text-inverse: var(--mg-palette-white);
+  --mg-color-heading: var(--mg-palette-navy-950);
+  --mg-color-accent: var(--mg-palette-turquoise-700);
+  --mg-color-accent-subtle: var(--mg-palette-turquoise-100);
+  --mg-color-link: var(--mg-palette-turquoise-800);
+  --mg-color-link-hover: var(--mg-palette-navy-900);
+  --mg-color-cta-bg: var(--mg-palette-navy-900);
+  --mg-color-cta-bg-hover: var(--mg-palette-navy-700);
+  --mg-color-cta-text: var(--mg-palette-white);
+  --mg-color-border: var(--mg-palette-navy-200);
+  --mg-color-border-strong: var(--mg-palette-navy-500);
+  --mg-color-decor: var(--mg-palette-gold-500);
+  --mg-color-decor-subtle: var(--mg-palette-gold-100);
+  --mg-color-focus-ring: var(--mg-palette-turquoise-700);
+  --mg-color-focus-ring-inverse: var(--mg-palette-turquoise-300);
+
+  /* Typography roles */
+  --mg-font-body: var(--mg-font-family-sans);
+  --mg-font-display: var(--mg-font-family-display);
+  --mg-text-small: var(--mg-size-text-sm);
+  --mg-text-body: var(--mg-size-text-md);
+  --mg-text-lead: var(--mg-size-text-lg);
+  --mg-text-h4: var(--mg-size-text-lg);
+  --mg-text-h3: var(--mg-size-text-xl);
+  --mg-text-h2: var(--mg-size-text-2xl);
+  --mg-text-h1: var(--mg-size-text-3xl);
+  --mg-text-display: var(--mg-size-text-4xl);
+  --mg-leading-body: 1.7; /* Hebrew body text reads better with generous leading */
+  --mg-leading-heading: 1.25;
+  --mg-weight-regular: 400;
+  --mg-weight-bold: 700;
+  --mg-measure: 68ch; /* max line length for running text */
+
+  /* Spacing scale 4–96px */
+  --mg-space-1: calc(var(--mg-space-unit) * 1); /* 4 */
+  --mg-space-2: calc(var(--mg-space-unit) * 2); /* 8 */
+  --mg-space-3: calc(var(--mg-space-unit) * 3); /* 12 */
+  --mg-space-4: calc(var(--mg-space-unit) * 4); /* 16 */
+  --mg-space-5: calc(var(--mg-space-unit) * 5); /* 20 */
+  --mg-space-6: calc(var(--mg-space-unit) * 6); /* 24 */
+  --mg-space-8: calc(var(--mg-space-unit) * 8); /* 32 */
+  --mg-space-10: calc(var(--mg-space-unit) * 10); /* 40 */
+  --mg-space-12: calc(var(--mg-space-unit) * 12); /* 48 */
+  --mg-space-16: calc(var(--mg-space-unit) * 16); /* 64 */
+  --mg-space-20: calc(var(--mg-space-unit) * 20); /* 80 */
+  --mg-space-24: calc(var(--mg-space-unit) * 24); /* 96 */
+  --mg-section-gap: var(--mg-space-16);
+
+  /* Layout */
+  --mg-grid-columns: 12;
+  --mg-container-max: 75rem; /* 1200px */
+  --mg-gutter: var(--mg-space-4);
+
+  /* Shape and elevation */
+  --mg-radius-control: var(--mg-size-radius-md);
+  --mg-radius-card: var(--mg-size-radius-lg);
+  --mg-radius-pill: var(--mg-size-radius-pill);
+  --mg-shadow-raised:
+    0 1px 2px color-mix(in srgb, var(--mg-palette-navy-950) 8%, transparent),
+    0 4px 12px color-mix(in srgb, var(--mg-palette-navy-950) 6%, transparent);
+
+  /* Interaction and accessibility */
+  --mg-tap-target-min: 2.75rem; /* 44px (WCAG 2.5.5 / IS 5568) */
+  --mg-focus-ring-width: 3px;
+  --mg-focus-ring-offset: 2px;
+
+  /* Motion roles */
+  --mg-duration-fast: var(--mg-time-fast);
+  --mg-duration-base: var(--mg-time-base);
+  --mg-duration-slow: var(--mg-time-slow);
+  --mg-ease-standard: var(--mg-curve-standard);
+  --mg-ease-exit: var(--mg-curve-exit);
+
+  /* Stacking */
+  --mg-z-header: 100;
+  --mg-z-floating: 200;
+  --mg-z-overlay: 300;
+  --mg-z-skip-link: 1000;
+}
+
+/* Wider screens: larger gutter. Breakpoint values: 390 / 768 / 1024 / 1440 (see theme.css). */
+@media (min-width: 64rem) {
+  :root {
+    --mg-gutter: var(--mg-space-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --mg-duration-fast: 0ms;
+    --mg-duration-base: 0ms;
+    --mg-duration-slow: 0ms;
+  }
+}
+
+/* ─── LAYER 3 · CHARACTER (placeholder accents per template) ───────────── */
+/* Set data-character on a template's root. Phase 2 defines the real character. */
+
+[data-character='home'] {
+  --mg-color-accent: var(--mg-palette-turquoise-700);
+}
+
+[data-character='information'] {
+  --mg-color-accent: var(--mg-palette-navy-700);
+}
+
+[data-character='trip'] {
+  --mg-color-accent: var(--mg-palette-turquoise-800);
+  --mg-color-surface: var(--mg-palette-turquoise-100);
+}
+
+[data-character='activity'] {
+  --mg-color-accent: var(--mg-palette-gold-800);
+  --mg-color-surface: var(--mg-palette-gold-100);
+}
+
+[data-character='library'] {
+  --mg-color-accent: var(--mg-palette-navy-700);
+}
+
+[data-character='legal'] {
+  --mg-color-accent: var(--mg-palette-navy-600);
+  --mg-color-decor: var(--mg-palette-navy-200);
+}

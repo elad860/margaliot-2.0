@@ -2,8 +2,7 @@
  * base.css — reset and accessible defaults for the public site (task T04).
  *
  * Unstyled foundation only: no design values live here. Every value comes from
- * a token in tokens.css (T05). Fallbacks are browser system colours/keywords so
- * the page stays usable if tokens fail to load.
+ * a --mg-* token in tokens.css (T05). Loaded through theme.css.
  *
  * Rules: logical properties only (inline/block, start/end) — enforced by
  * scripts/check-logical-css.mjs. RTL comes from <html dir="rtl">, never from CSS.
@@ -28,11 +27,12 @@
 
   body {
     min-block-size: 100dvh;
-    font-family: var(--font-body, system-ui, sans-serif);
-    font-size: var(--text-body, 1rem);
-    line-height: var(--leading-body, normal);
-    color: var(--color-text, CanvasText);
-    background-color: var(--color-bg, Canvas);
+    font-weight: var(--mg-weight-regular);
+    font-family: var(--mg-font-body);
+    font-size: var(--mg-text-body);
+    line-height: var(--mg-leading-body);
+    color: var(--mg-color-text);
+    background-color: var(--mg-color-bg);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -69,6 +69,9 @@
   h2,
   h3,
   h4 {
+    font-family: var(--mg-font-display);
+    line-height: var(--mg-leading-heading);
+    color: var(--mg-color-heading);
     text-wrap: balance;
   }
 
@@ -78,8 +81,8 @@
 
   /* Visible focus for keyboard users (IS 5568 / WCAG 2.4.7, 2.4.11). */
   :focus-visible {
-    outline: var(--focus-ring-width, medium) solid var(--color-focus-ring, Highlight);
-    outline-offset: var(--focus-ring-offset, 0.125em);
+    outline: var(--mg-focus-ring-width) solid var(--mg-color-focus-ring);
+    outline-offset: var(--mg-focus-ring-offset);
   }
 
   /* Targets of skip links / programmatic focus: no ring on the whole region. */
@@ -90,17 +93,17 @@
   /* Skip link: hidden until focused, then pinned to the start (right in RTL). */
   .skip-link {
     position: absolute;
-    inset-block-start: var(--space-2, 0.5rem);
-    inset-inline-start: var(--space-2, 0.5rem);
-    z-index: var(--z-skip-link, 1000);
-    padding-block: var(--space-2, 0.5rem);
-    padding-inline: var(--space-4, 1rem);
-    min-block-size: var(--tap-target-min, 2.75rem);
+    inset-block-start: var(--mg-space-2);
+    inset-inline-start: var(--mg-space-2);
+    z-index: var(--mg-z-skip-link);
+    padding-block: var(--mg-space-2);
+    padding-inline: var(--mg-space-4);
+    min-block-size: var(--mg-tap-target-min);
     display: inline-flex;
     align-items: center;
-    color: var(--color-cta-text, Canvas);
-    background-color: var(--color-cta-bg, CanvasText);
-    transform: translateY(calc(-100% - var(--space-4, 1rem)));
+    color: var(--mg-color-cta-text);
+    background-color: var(--mg-color-cta-bg);
+    transform: translateY(calc(-100% - var(--mg-space-4)));
   }
 
   .skip-link:focus-visible {

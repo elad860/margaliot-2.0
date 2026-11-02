@@ -1,0 +1,119 @@
+/*
+ * theme.css — entry stylesheet of the public site (task T05).
+ *
+ * Order: Tailwind → design tokens → base styles → Tailwind theme mapping.
+ * The @theme block maps Tailwind utility names onto the --mg-* tokens in
+ * tokens.css, so components use semantic utilities (bg-surface, text-accent,
+ * ps-4, text-h2, rounded-card, duration-base …) and never raw values.
+ *
+ * Tailwind's default palette, fonts, type sizes, radii and shadows are
+ * removed (`initial`), so utilities like bg-red-500 or text-5xl do not exist.
+ * Values change only in tokens.css.
+ */
+
+@import 'tailwindcss' source('..');
+@import './tokens.css';
+@import './base.css';
+
+@theme inline {
+  /* Colours: semantic roles only */
+  --color-*: initial;
+  --color-bg: var(--mg-color-bg);
+  --color-surface: var(--mg-color-surface);
+  --color-surface-raised: var(--mg-color-surface-raised);
+  --color-surface-inverse: var(--mg-color-surface-inverse);
+  --color-text: var(--mg-color-text);
+  --color-text-muted: var(--mg-color-text-muted);
+  --color-text-inverse: var(--mg-color-text-inverse);
+  --color-heading: var(--mg-color-heading);
+  --color-accent: var(--mg-color-accent);
+  --color-accent-subtle: var(--mg-color-accent-subtle);
+  --color-link: var(--mg-color-link);
+  --color-link-hover: var(--mg-color-link-hover);
+  --color-cta: var(--mg-color-cta-bg);
+  --color-cta-hover: var(--mg-color-cta-bg-hover);
+  --color-cta-text: var(--mg-color-cta-text);
+  --color-border: var(--mg-color-border);
+  --color-border-strong: var(--mg-color-border-strong);
+  --color-decor: var(--mg-color-decor);
+  --color-decor-subtle: var(--mg-color-decor-subtle);
+  --color-focus: var(--mg-color-focus-ring);
+  --color-focus-inverse: var(--mg-color-focus-ring-inverse);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Families */
+  --font-*: initial;
+  --font-body: var(--mg-font-body);
+  --font-display: var(--mg-font-display);
+
+  /* Type sizes (with matching line heights) */
+  --text-*: initial;
+  --text-small: var(--mg-text-small);
+  --text-body: var(--mg-text-body);
+  --text-body--line-height: var(--mg-leading-body);
+  --text-lead: var(--mg-text-lead);
+  --text-lead--line-height: var(--mg-leading-body);
+  --text-h4: var(--mg-text-h4);
+  --text-h4--line-height: var(--mg-leading-heading);
+  --text-h3: var(--mg-text-h3);
+  --text-h3--line-height: var(--mg-leading-heading);
+  --text-h2: var(--mg-text-h2);
+  --text-h2--line-height: var(--mg-leading-heading);
+  --text-h1: var(--mg-text-h1);
+  --text-h1--line-height: var(--mg-leading-heading);
+  --text-display: var(--mg-text-display);
+  --text-display--line-height: var(--mg-leading-heading);
+
+  /* Spacing: Tailwind multiplies this unit (p-4 = 4 units = 16px = --mg-space-4) */
+  --spacing: var(--mg-space-unit);
+
+  /* Layout */
+  --container-content: var(--mg-container-max);
+  --container-measure: var(--mg-measure);
+
+  /* Shape and elevation */
+  --radius-*: initial;
+  --radius-control: var(--mg-radius-control);
+  --radius-card: var(--mg-radius-card);
+  --radius-pill: var(--mg-radius-pill);
+  --shadow-*: initial;
+  --shadow-raised: var(--mg-shadow-raised);
+
+  /* Motion */
+  --ease-*: initial;
+  --ease-standard: var(--mg-ease-standard);
+  --ease-exit: var(--mg-ease-exit);
+  --default-transition-duration: var(--mg-duration-base);
+  --default-transition-timing-function: var(--mg-ease-standard);
+}
+
+/*
+ * Breakpoints (shared constants: 390 / 768 / 1024 / 1440). Media queries
+ * cannot read CSS variables, so these are the one place sizes are literal.
+ * Mobile-first: unprefixed utilities are the 0–389px base.
+ */
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-sm: 24.375rem; /* 390px */
+  --breakpoint-md: 48rem; /* 768px */
+  --breakpoint-lg: 64rem; /* 1024px */
+  --breakpoint-xl: 90rem; /* 1440px */
+}
+
+/* Motion durations as utilities: duration-fast | duration-base | duration-slow */
+@utility duration-fast {
+  transition-duration: var(--mg-duration-fast);
+}
+@utility duration-base {
+  transition-duration: var(--mg-duration-base);
+}
+@utility duration-slow {
+  transition-duration: var(--mg-duration-slow);
+}
+
+/* Minimum tap target (44px): tap-target */
+@utility tap-target {
+  min-block-size: var(--mg-tap-target-min);
+  min-inline-size: var(--mg-tap-target-min);
+}

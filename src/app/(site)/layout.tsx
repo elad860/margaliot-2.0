@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
 import { SkipLink } from '@/components/layout/SkipLink'
-import '@/styles/base.css'
+import '@/styles/theme.css'
 
 export const metadata: Metadata = {
   title: 'מרגליות',

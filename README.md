@@ -17,6 +17,7 @@ Stack (ADR-0001, approved 2026-11-02): Next.js 16.4 (App Router) + Payload CMS 3
 | Dev server                  | `pnpm dev` → site at http://localhost:3000, CMS at http://localhost:3000/admin |
 | Lint                        | `pnpm lint` (ESLint + logical-CSS check)                                       |
 | Logical-CSS check only      | `pnpm lint:css`                                                                |
+| Token check only            | `pnpm lint:tokens`                                                             |
 | Typecheck                   | `pnpm typecheck`                                                               |
 | Format                      | `pnpm format` / `pnpm format:check`                                            |
 | Build                       | `pnpm build`                                                                   |
@@ -62,6 +63,12 @@ pnpm dev                    # then open /admin and create the first admin user
 | Regenerate `src/payload-types.ts`        | `pnpm generate:types`         |
 
 **Push vs. migrations.** With `SITE_ENV=development`, Payload "pushes" schema changes straight into your local database while you work, so you do not need a migration for every experiment. Preview and production **never** push: their schema changes only through migrations in `src/migrations/`, committed with the code. Workflow for a schema change: edit the collection → `pnpm migrate:create <name>` → `pnpm generate:types` → commit both. Set `PAYLOAD_DB_PUSH=false` to work locally exactly like preview (migrations only); this avoids Payload's prompt when you run `pnpm migrate` against a database that was previously pushed.
+
+## Styling and design tokens
+
+- `src/styles/tokens.css` holds every design value in three layers: **primitives** (`--mg-palette-*`, raw scales), **semantic** roles (`--mg-color-text`, `--mg-space-4`, …) and **character** overrides per template (`[data-character="trip"]`). Phase 1 values are labelled placeholders derived from the brand colours; the Phase 2 Design System replaces the primitive values without touching components.
+- `src/styles/theme.css` is the stylesheet entry: Tailwind 4 + tokens + `base.css`, with `@theme inline` mapping Tailwind utilities onto the tokens (`bg-surface`, `text-accent`, `text-h2`, `rounded-card`, `ps-4`, `tap-target`, `duration-base`). Tailwind's default palette, sizes, radii and shadows are disabled.
+- Rules enforced by `pnpm lint`: logical properties only (`ms-`/`me-`/`ps-`/`pe-`/`start-`/`end-`, never left/right) and no colour literals or hard-coded sizes outside `tokens.css`.
 
 ## Folder layout
 
