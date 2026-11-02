@@ -18,7 +18,8 @@
     "typecheck": "tsc --noEmit",
     "payload": "payload",
     "generate:types": "payload generate:types",
-    "generate:importmap": "payload generate:importmap"
+    "generate:importmap": "payload generate:importmap",
+    "check:secrets": "node scripts/check-secrets.mjs"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.92.1",

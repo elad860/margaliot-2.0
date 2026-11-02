@@ -21,6 +21,22 @@ Stack (ADR-0001, approved 2026-11-02): Next.js 16.4 (App Router) + Payload CMS 3
 | Build                       | `pnpm build`                                                                   |
 | Generate Payload types      | `pnpm generate:types`                                                          |
 | Regenerate admin import map | `pnpm generate:importmap`                                                      |
+| Secret scan                 | `pnpm check:secrets`                                                           |
+
+## Environment
+
+Copy `.env.example` to `.env` (git-ignored) and fill it in. `src/lib/env.ts` validates the variables when the dev server, build or Payload CLI starts, and stops with a list of what is missing.
+
+| Variable                | Required                   | Notes                                                                          |
+| ----------------------- | -------------------------- | ------------------------------------------------------------------------------ |
+| `DATABASE_URL`          | always                     | PostgreSQL connection string                                                   |
+| `PAYLOAD_SECRET`        | always                     | ≥ 32 characters (`openssl rand -hex 32`)                                       |
+| `SITE_ENV`              | no (default `development`) | `development` / `preview` / `production`; anything but `production` is noindex |
+| `NEXT_PUBLIC_SITE_URL`  | preview/production         | defaults to `http://localhost:3000` in development                             |
+| `BLOB_READ_WRITE_TOKEN` | preview/production         | Vercel Blob media storage; local disk in development                           |
+| `PREVIEW_SECRET`        | preview/production         | ≥ 32 characters; draft-preview route (T12)                                     |
+
+Never commit `.env` files or secrets. Run `pnpm check:secrets` before pushing.
 
 ## Folder layout
 
