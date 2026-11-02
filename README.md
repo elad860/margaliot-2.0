@@ -15,7 +15,8 @@ Stack (ADR-0001, approved 2026-11-02): Next.js 16.4 (App Router) + Payload CMS 3
 | --------------------------- | ------------------------------------------------------------------------------ |
 | Install                     | `pnpm install`                                                                 |
 | Dev server                  | `pnpm dev` → site at http://localhost:3000, CMS at http://localhost:3000/admin |
-| Lint                        | `pnpm lint`                                                                    |
+| Lint                        | `pnpm lint` (ESLint + logical-CSS check)                                       |
+| Logical-CSS check only      | `pnpm lint:css`                                                                |
 | Typecheck                   | `pnpm typecheck`                                                               |
 | Format                      | `pnpm format` / `pnpm format:check`                                            |
 | Build                       | `pnpm build`                                                                   |

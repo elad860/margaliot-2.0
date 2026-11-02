@@ -1,0 +1,136 @@
+/*
+ * base.css — reset and accessible defaults for the public site (task T04).
+ *
+ * Unstyled foundation only: no design values live here. Every value comes from
+ * a token in tokens.css (T05). Fallbacks are browser system colours/keywords so
+ * the page stays usable if tokens fail to load.
+ *
+ * Rules: logical properties only (inline/block, start/end) — enforced by
+ * scripts/check-logical-css.mjs. RTL comes from <html dir="rtl">, never from CSS.
+ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    color-scheme: light;
+  }
+
+  body {
+    min-block-size: 100dvh;
+    font-family: var(--font-body, system-ui, sans-serif);
+    font-size: var(--text-body, 1rem);
+    line-height: var(--leading-body, normal);
+    color: var(--color-text, CanvasText);
+    background-color: var(--color-bg, Canvas);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  p,
+  li,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible focus for keyboard users (IS 5568 / WCAG 2.4.7, 2.4.11). */
+  :focus-visible {
+    outline: var(--focus-ring-width, medium) solid var(--color-focus-ring, Highlight);
+    outline-offset: var(--focus-ring-offset, 0.125em);
+  }
+
+  /* Targets of skip links / programmatic focus: no ring on the whole region. */
+  [tabindex='-1']:focus {
+    outline: none;
+  }
+
+  /* Skip link: hidden until focused, then pinned to the start (right in RTL). */
+  .skip-link {
+    position: absolute;
+    inset-block-start: var(--space-2, 0.5rem);
+    inset-inline-start: var(--space-2, 0.5rem);
+    z-index: var(--z-skip-link, 1000);
+    padding-block: var(--space-2, 0.5rem);
+    padding-inline: var(--space-4, 1rem);
+    min-block-size: var(--tap-target-min, 2.75rem);
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-cta-text, Canvas);
+    background-color: var(--color-cta-bg, CanvasText);
+    transform: translateY(calc(-100% - var(--space-4, 1rem)));
+  }
+
+  .skip-link:focus-visible {
+    transform: none;
+  }
+
+  .visually-hidden:not(:focus):not(:active) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Respect reduced motion everywhere (WCAG 2.3.3). */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
