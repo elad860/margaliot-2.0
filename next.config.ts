@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Do not auto-generate AGENTS.md; project agent rules live in CLAUDE.md.
   agentRules: false,
+  experimental: {
+    // Two root layouts (site + Payload admin): unmatched URLs use app/global-not-found.tsx (Hebrew, RTL).
+    globalNotFound: true,
+  },
   async headers() {
     // The CMS admin and API are never indexed, in any environment.
     // Site-wide non-production noindex is added in T15.

@@ -63,3 +63,7 @@ export const getNavigation = cache(async () => {
   const [keys, settings] = await Promise.all([getPublishedPageKeys(), getNavigationGlobal()])
   return buildNavigation(keys, settings)
 })
+
+export const getMedia = cache(async (id: number | null | undefined) =>
+  q.findMedia(await getPayloadClient(), id),
+)

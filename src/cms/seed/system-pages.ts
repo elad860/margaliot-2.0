@@ -2,8 +2,10 @@ import type { Payload } from 'payload'
 
 import { SITE_MAP } from '@/config/site-map'
 
+import { PLACEHOLDER } from '@/config/placeholder'
+
 /** The only text the seed ever writes (CLAUDE.md: no invented content). */
-export const PLACEHOLDER = '[תוכן יתווסף]'
+export { PLACEHOLDER }
 
 export type SeedResult = { created: string[]; existing: string[] }
 

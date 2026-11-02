@@ -101,17 +101,31 @@ export function findSiteSettings(payload: Payload): Promise<SiteSetting> {
   return payload.findGlobal({ slug: 'site-settings', depth: 0, overrideAccess: false })
 }
 
+/** A media document (public collection), or null. */
+export async function findMedia(payload: Payload, id: number | null | undefined) {
+  if (typeof id !== 'number') return null
+  try {
+    return await payload.findByID({ collection: 'media', id, depth: 0, overrideAccess: false })
+  } catch {
+    return null
+  }
+}
+
+/** Id of the trip selected as המסע הקרוב (not checked for publish status). */
+export function nextTripId(settings: SiteSetting): number | null {
+  const ref = settings.nextTrip
+  const id = typeof ref === 'object' && ref !== null ? ref.id : ref
+  return typeof id === 'number' ? id : null
+}
+
 export function findNavigation(payload: Payload): Promise<Navigation> {
   return payload.findGlobal({ slug: 'navigation', depth: 0, overrideAccess: false })
 }
 
 /** The trip selected as המסע הקרוב, if it is visible to this viewer (published, or draft in preview). */
 export async function findNextTrip(payload: Payload, viewer: Viewer): Promise<Trip | null> {
-  const settings = await findSiteSettings(payload)
-  const ref = settings.nextTrip
-  const id = typeof ref === 'object' && ref !== null ? ref.id : ref
-  if (typeof id !== 'number') return null
-  return findTripById(payload, viewer, id)
+  const id = nextTripId(await findSiteSettings(payload))
+  return id === null ? null : findTripById(payload, viewer, id)
 }
 
 export type ActivityKey = Extract<SystemPageKey, Event['activityType']>

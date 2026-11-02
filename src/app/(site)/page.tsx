@@ -1,7 +1,11 @@
-/**
- * Home page stub. Visually blank; keeps the one-h1-per-page rule.
- * Replaced by the home template in T14/T33.
- */
+import { SystemPageView } from '@/templates/SystemPageView'
+import { systemPageMetadata } from '@/lib/seo/page-metadata'
+
+/** Home (/). 404 until the home page is published (T14). */
+export function generateMetadata() {
+  return systemPageMetadata('home')
+}
+
 export default function HomePage() {
-  return <h1 className="visually-hidden">מרגליות</h1>
+  return <SystemPageView pageKey="home" />
 }
