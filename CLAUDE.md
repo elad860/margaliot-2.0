@@ -130,6 +130,6 @@ Standard flow for a task: system-architect + senior-ui-design-architect (plan, A
 - New migration: `pnpm migrate:create <name>`
 - Lint: `pnpm lint` (includes logical-CSS and no-colour-literal checks)
 - Typecheck: `pnpm typecheck`
-- Tests: `pnpm test`; integration: `pnpm test:int` (needs `DATABASE_URL_TEST`, a throwaway database wiped on each run)
-- Build: `pnpm build`
+- Tests: `pnpm test`; integration: `pnpm test:int` (needs `DATABASE_URL_TEST`, a throwaway database wiped on each run); end-to-end + axe: `pnpm test:e2e` (needs `DATABASE_URL_E2E`, a separate throwaway database)
+- Build: `pnpm build` (needs a migrated database — pages are generated from it at build time)
 - Secret scan before every push: `pnpm check:secrets`
