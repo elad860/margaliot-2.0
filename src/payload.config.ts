@@ -2,6 +2,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { he } from '@payloadcms/translations/languages/he'
@@ -9,6 +10,7 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 
 import { Media } from './cms/collections/Media'
+import { Pages } from './cms/collections/Pages'
 import { Users } from './cms/collections/Users'
 import { getServerEnv } from './lib/env'
 
@@ -22,6 +24,8 @@ export default buildConfig({
   serverURL: env.NEXT_PUBLIC_SITE_URL,
   admin: {
     user: Users.slug,
+    // Built-in avatar: the default (Gravatar) would send a hash of each admin's e-mail to a third party.
+    avatar: 'default',
     importMap: {
       baseDir: path.resolve(dirname),
     },
@@ -43,7 +47,7 @@ export default buildConfig({
   },
   cors: [env.NEXT_PUBLIC_SITE_URL],
   csrf: [env.NEXT_PUBLIC_SITE_URL],
-  collections: [Users, Media],
+  collections: [Pages, Media, Users],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {
@@ -63,6 +67,13 @@ export default buildConfig({
   },
   sharp,
   plugins: [
+    // Per-page SEO fields (`meta`: title, description, image) on Pages (T08). Metadata output is built in T15.
+    seoPlugin({
+      collections: ['pages'],
+      uploadsCollection: 'media',
+      tabbedUI: false,
+      generateTitle: ({ doc }) => (doc as { title?: string }).title ?? '',
+    }),
     // Media goes to Vercel Blob when a token is configured (preview/production);
     // otherwise uploads stay on local disk (development).
     vercelBlobStorage({

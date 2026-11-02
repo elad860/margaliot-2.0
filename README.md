@@ -53,6 +53,7 @@ pnpm install
 cp .env.example .env        # set DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/margaliot and PAYLOAD_SECRET
 pnpm db:up                  # start Postgres 17
 pnpm migrate                # apply committed migrations
+pnpm seed                   # create the 15 system pages as drafts
 pnpm dev                    # then open /admin and create the first admin user
 ```
 

@@ -26,6 +26,7 @@
     "migrate": "payload migrate",
     "migrate:create": "payload migrate:create",
     "migrate:status": "payload migrate:status",
+    "seed": "payload run src/cms/seed/run.ts",
     "payload": "payload",
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
@@ -34,6 +35,7 @@
   "dependencies": {
     "@payloadcms/db-postgres": "3.92.1",
     "@payloadcms/next": "3.92.1",
+    "@payloadcms/plugin-seo": "3.92.1",
     "@payloadcms/richtext-lexical": "3.92.1",
     "@payloadcms/storage-vercel-blob": "3.92.1",
     "@payloadcms/translations": "3.92.1",
