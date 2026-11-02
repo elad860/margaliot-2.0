@@ -35,3 +35,20 @@ export const canAccessAdmin = ({ req: { user } }: { req: { user: object | null }
   isStaffUser(user)
 
 export const isAdminField: FieldAccess = ({ req: { user } }) => isAdminUser(user)
+
+/** Access for draft-enabled content collections: the public reads published documents only. */
+export const draftContentAccess = {
+  read: publishedOrStaff,
+  readVersions: isStaff,
+  create: isStaff,
+  update: isStaff,
+  delete: isStaff,
+}
+
+/** Access for content collections without drafts (Topics, Team): public read, staff write. */
+export const publicContentAccess = {
+  read: anyone,
+  create: isStaff,
+  update: isStaff,
+  delete: isStaff,
+}

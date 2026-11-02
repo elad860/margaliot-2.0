@@ -9,9 +9,17 @@ import { he } from '@payloadcms/translations/languages/he'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 
+import { Events } from './cms/collections/Events'
+import { Lessons } from './cms/collections/Lessons'
 import { Media } from './cms/collections/Media'
 import { Pages } from './cms/collections/Pages'
+import { Parashot } from './cms/collections/Parashot'
+import { Team } from './cms/collections/Team'
+import { Testimonials } from './cms/collections/Testimonials'
+import { Topics } from './cms/collections/Topics'
+import { Trips } from './cms/collections/Trips'
 import { Users } from './cms/collections/Users'
+import { formBuilder } from './cms/plugins/form-builder'
 import { getServerEnv } from './lib/env'
 
 const filename = fileURLToPath(import.meta.url)
@@ -47,7 +55,7 @@ export default buildConfig({
   },
   cors: [env.NEXT_PUBLIC_SITE_URL],
   csrf: [env.NEXT_PUBLIC_SITE_URL],
-  collections: [Pages, Media, Users],
+  collections: [Pages, Trips, Events, Parashot, Lessons, Topics, Testimonials, Team, Media, Users],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {
@@ -67,12 +75,16 @@ export default buildConfig({
   },
   sharp,
   plugins: [
-    // Per-page SEO fields (`meta`: title, description, image) on Pages (T08). Metadata output is built in T15.
+    // SEO fields (`meta`: title, description, image) on Pages (T08) and child items (T09). Output: T15.
+    formBuilder,
     seoPlugin({
-      collections: ['pages'],
+      collections: ['pages', 'trips', 'parashot', 'lessons'],
       uploadsCollection: 'media',
       tabbedUI: false,
-      generateTitle: ({ doc }) => (doc as { title?: string }).title ?? '',
+      generateTitle: ({ doc }) => {
+        const { title, name } = doc as { title?: string; name?: string }
+        return title ?? name ?? ''
+      },
     }),
     // Media goes to Vercel Blob when a token is configured (preview/production);
     // otherwise uploads stay on local disk (development).
