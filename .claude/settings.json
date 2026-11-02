@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(vercel:*)",
+      "Bash(npx vercel:*)"
+    ],
+    "deny": [
+      "Bash(vercel --prod:*)",
+      "Bash(vercel deploy --prod:*)",
+      "Bash(npx vercel --prod:*)",
+      "Bash(npx vercel deploy --prod:*)",
+      "Bash(git push --force:*)"
+    ]
+  }
+}
