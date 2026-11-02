@@ -1,0 +1,23 @@
+# Local PostgreSQL 17 for development (ADR-0002). Start with: pnpm db:up
+# Matching DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/margaliot
+# Local-only credentials; never reuse them for preview or production.
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: margaliot
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - margaliot-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d margaliot']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  margaliot-pgdata:

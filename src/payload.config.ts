@@ -31,6 +31,10 @@ export default buildConfig({
     pool: {
       connectionString: env.DATABASE_URL,
     },
+    migrationDir: path.resolve(dirname, 'migrations'),
+    // Schema "push" is a local-development convenience only. Preview and production
+    // change the schema exclusively through committed migrations (ADR-0002).
+    push: env.SITE_ENV === 'development' && process.env.PAYLOAD_DB_PUSH !== 'false',
   }),
   sharp,
 })
