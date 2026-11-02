@@ -4,6 +4,7 @@ import { ALL_BLOCKS, allowedBlocksFor } from '@/blocks'
 import { SITE_MAP, type TemplateKey } from '@/config/site-map'
 
 import { isAdmin, isAdminUser, isStaff, publishedOrStaff } from '../access'
+import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 import { enforceTemplateBlocks } from '../hooks/enforce-template-blocks'
 import { lockSystemPageFields } from '../hooks/lock-system-pages'
 
@@ -59,6 +60,8 @@ export const Pages: CollectionConfig = {
     delete: deleteNonSystemPagesOnly,
   },
   hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
     beforeChange: [lockSystemPageFields, enforceTemplateBlocks],
   },
   fields: [

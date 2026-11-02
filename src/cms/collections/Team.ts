@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { publicContentAccess } from '../access'
+import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 
 /** Team (task T09): people shown on מי אנחנו and as trip guides. */
 export const Team: CollectionConfig = {
@@ -13,6 +14,10 @@ export const Team: CollectionConfig = {
   },
   defaultSort: 'order',
   access: publicContentAccess,
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
+  },
   fields: [
     { name: 'name', type: 'text', label: 'שם', required: true },
     { name: 'role', type: 'text', label: 'תפקיד' },

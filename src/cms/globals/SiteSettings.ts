@@ -3,6 +3,7 @@ import type { GlobalConfig } from 'payload'
 import { checkPhone, checkUrlOnHosts } from '@/lib/validators'
 
 import { anyone, isStaff } from '../access'
+import { revalidateGlobal } from '../hooks/revalidate'
 
 /** Social networks stored once and used everywhere (UX review F11). Each is optional. */
 export const SOCIAL_NETWORKS = [
@@ -28,6 +29,7 @@ export const SiteSettings: GlobalConfig = {
     group: 'הגדרות',
     description: 'פרטי קשר, רשתות חברתיות והמסע הקרוב. כל שדה שנשאר ריק פשוט לא מוצג באתר.',
   },
+  hooks: { afterChange: [revalidateGlobal] },
   access: {
     read: anyone,
     update: isStaff,

@@ -22,6 +22,7 @@ import { Users } from './cms/collections/Users'
 import { Navigation } from './cms/globals/Navigation'
 import { SiteSettings } from './cms/globals/SiteSettings'
 import { formBuilder } from './cms/plugins/form-builder'
+import { PREVIEW_COLLECTIONS, previewUrl } from './cms/preview'
 import { getServerEnv } from './lib/env'
 
 const filename = fileURLToPath(import.meta.url)
@@ -44,6 +45,17 @@ export default buildConfig({
       // The admin is never indexed (ADR-0002); an X-Robots-Tag header is also set in next.config.ts.
       robots: { index: false, follow: false },
       defaultOGImageType: 'off',
+    },
+    // Editors see drafts in the real page layout (T12). The URL goes through the
+    // authenticated /api/preview route, which turns on Next.js draft mode.
+    livePreview: {
+      collections: [...PREVIEW_COLLECTIONS],
+      url: ({ data, collectionConfig }) => previewUrl(collectionConfig?.slug, data) ?? '',
+      breakpoints: [
+        { name: 'mobile', label: 'נייד', width: 390, height: 844 },
+        { name: 'tablet', label: 'טאבלט', width: 768, height: 1024 },
+        { name: 'desktop', label: 'מחשב', width: 1440, height: 900 },
+      ],
     },
   },
   // Hebrew-only admin; Payload renders it right-to-left.

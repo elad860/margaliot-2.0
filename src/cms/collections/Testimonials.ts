@@ -4,6 +4,7 @@ import { ValidationError } from 'payload'
 import { tabOptions } from '@/config/activities'
 
 import { draftContentAccess } from '../access'
+import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 
 /**
  * A testimonial can only be published once the owner confirms the person
@@ -37,7 +38,11 @@ export const Testimonials: CollectionConfig = {
   defaultSort: '-createdAt',
   versions: { drafts: true, maxPerDoc: 20 },
   access: draftContentAccess,
-  hooks: { beforeChange: [requireConsentToPublish] },
+  hooks: {
+    beforeChange: [requireConsentToPublish],
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
+  },
   fields: [
     { name: 'quote', type: 'textarea', label: 'ההמלצה', required: true },
     {

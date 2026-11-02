@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { checkYouTubeUrl } from '@/lib/youtube'
 
 import { draftContentAccess } from '../access'
+import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 import { slugField } from '../fields/slug'
 
 export const TORAH_BOOKS = [
@@ -30,6 +31,10 @@ export const Parashot: CollectionConfig = {
   defaultSort: '-publishDate',
   versions: { drafts: true, maxPerDoc: 50 },
   access: draftContentAccess,
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
+  },
   fields: [
     { name: 'name', type: 'text', label: 'שם הפרשה', required: true },
     slugField('חלק הכתובת באתר, בתעתיק לאנגלית (למשל: vayera).'),

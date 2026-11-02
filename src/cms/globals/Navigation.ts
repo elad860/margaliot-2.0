@@ -10,6 +10,7 @@ import { NAV_GROUPS, TABS, getSystemPage } from '@/config/site-map'
 import { checkLinkHref } from '@/lib/validators'
 
 import { anyone, isStaff } from '../access'
+import { revalidateGlobal } from '../hooks/revalidate'
 
 type HeaderItemSibling = { type?: 'group' | 'page' } | undefined
 
@@ -30,6 +31,7 @@ export const Navigation: GlobalConfig = {
     description:
       'סדר פריטי התפריט, שמות הקבוצות ותיאורים קצרים. רק עמודים שפורסמו מופיעים בתפריט. שמות הלשוניות קבועים.',
   },
+  hooks: { afterChange: [revalidateGlobal] },
   access: {
     read: anyone,
     update: isStaff,

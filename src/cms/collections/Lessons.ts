@@ -4,6 +4,7 @@ import { checkHttpsUrl } from '@/lib/validators'
 import { checkYouTubeUrl } from '@/lib/youtube'
 
 import { draftContentAccess } from '../access'
+import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 import { slugField } from '../fields/slug'
 
 type Sibling = { kind?: 'recorded' | 'live' } | undefined
@@ -24,6 +25,10 @@ export const Lessons: CollectionConfig = {
   defaultSort: '-createdAt',
   versions: { drafts: true, maxPerDoc: 50 },
   access: draftContentAccess,
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
+  },
   fields: [
     { name: 'title', type: 'text', label: 'שם השיעור', required: true },
     slugField(),

@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { activityOptions } from '@/config/activities'
 
 import { draftContentAccess } from '../access'
+import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 import { registrationField } from '../fields/registration'
 
 /**
@@ -23,6 +24,10 @@ export const Events: CollectionConfig = {
   defaultSort: 'start',
   versions: { drafts: true, maxPerDoc: 50 },
   access: draftContentAccess,
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
+  },
   fields: [
     { name: 'title', type: 'text', label: 'כותרת', required: true },
     {

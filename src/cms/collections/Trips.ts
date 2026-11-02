@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { draftContentAccess } from '../access'
+import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 import { registrationField } from '../fields/registration'
 import { slugField } from '../fields/slug'
 
@@ -25,6 +26,10 @@ export const Trips: CollectionConfig = {
   defaultSort: '-startDate',
   versions: { drafts: true, maxPerDoc: 50 },
   access: draftContentAccess,
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
+  },
   fields: [
     { name: 'title', type: 'text', label: 'שם המסע', required: true },
     slugField(),

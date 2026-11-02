@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import type { CollectionConfig } from 'payload'
 
 import { anyone, isStaff } from '../access'
+import { revalidateAfterChange, revalidateAfterDelete } from '../hooks/revalidate'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -19,6 +20,10 @@ export const Media: CollectionConfig = {
   admin: {
     group: 'תוכן',
     defaultColumns: ['filename', 'alt', 'updatedAt'],
+  },
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
   },
   access: {
     read: anyone,
