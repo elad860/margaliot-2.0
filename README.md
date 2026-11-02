@@ -20,6 +20,7 @@ Stack (ADR-0001, approved 2026-11-02): Next.js 16.4 (App Router) + Payload CMS 3
 | Token check only            | `pnpm lint:tokens`                                                             |
 | Typecheck                   | `pnpm typecheck`                                                               |
 | Format                      | `pnpm format` / `pnpm format:check`                                            |
+| Unit tests (Vitest)         | `pnpm test` (watch: `pnpm test:watch`)                                         |
 | Build                       | `pnpm build`                                                                   |
 | Generate Payload types      | `pnpm generate:types`                                                          |
 | Regenerate admin import map | `pnpm generate:importmap`                                                      |
@@ -69,6 +70,10 @@ pnpm dev                    # then open /admin and create the first admin user
 - `src/styles/tokens.css` holds every design value in three layers: **primitives** (`--mg-palette-*`, raw scales), **semantic** roles (`--mg-color-text`, `--mg-space-4`, …) and **character** overrides per template (`[data-character="trip"]`). Phase 1 values are labelled placeholders derived from the brand colours; the Phase 2 Design System replaces the primitive values without touching components.
 - `src/styles/theme.css` is the stylesheet entry: Tailwind 4 + tokens + `base.css`, with `@theme inline` mapping Tailwind utilities onto the tokens (`bg-surface`, `text-accent`, `text-h2`, `rounded-card`, `ps-4`, `tap-target`, `duration-base`). Tailwind's default palette, sizes, radii and shadows are disabled.
 - Rules enforced by `pnpm lint`: logical properties only (`ms-`/`me-`/`ps-`/`pe-`/`start-`/`end-`, never left/right) and no colour literals or hard-coded sizes outside `tokens.css`.
+
+## Site map
+
+`src/config/site-map.ts` is the registry of the 15 system pages (home, the 11 tabs, 3 legal pages): exact Hebrew name, order, slug, template, menu group, footer flag. `tests/unit/site-map.test.ts` compares the tab names with `CLAUDE.md` character by character. Reserved routes (future booking/account, system) are in `src/config/reserved-routes.ts`.
 
 ## Folder layout
 

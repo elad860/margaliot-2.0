@@ -18,6 +18,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "db:up": "docker compose up -d db",
     "db:down": "docker compose down",
     "migrate": "payload migrate",
@@ -51,7 +53,8 @@
     "postcss": "8.5.32",
     "prettier": "3.9.10",
     "tailwindcss": "4.3.3",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
