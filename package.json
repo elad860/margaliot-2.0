@@ -21,6 +21,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:int": "vitest run --config vitest.int.config.mts",
+    "test:e2e": "playwright test",
+    "e2e:prepare": "node scripts/e2e.mjs prepare",
+    "e2e:build": "node scripts/e2e.mjs build",
     "db:up": "docker compose up -d db",
     "db:down": "docker compose down",
     "migrate": "payload migrate",
@@ -50,6 +53,8 @@
     "sharp": "0.35.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "22.20.5",
     "@types/react": "19.3.0",

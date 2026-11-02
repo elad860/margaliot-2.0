@@ -22,7 +22,8 @@ Stack (ADR-0001, approved 2026-11-02): Next.js 16.4 (App Router) + Payload CMS 3
 | Format                      | `pnpm format` / `pnpm format:check`                                            |
 | Unit tests (Vitest)         | `pnpm test` (watch: `pnpm test:watch`)                                         |
 | Integration tests (DB)      | `pnpm test:int` (needs `DATABASE_URL_TEST`, a disposable database)             |
-| Build                       | `pnpm build`                                                                   |
+| E2E + accessibility tests   | `pnpm test:e2e` (needs `DATABASE_URL_E2E`, a disposable database; see below)   |
+| Build                       | `pnpm build` (needs a migrated database: pages are statically generated)       |
 | Generate Payload types      | `pnpm generate:types`                                                          |
 | Regenerate admin import map | `pnpm generate:importmap`                                                      |
 | Secret scan                 | `pnpm check:secrets`                                                           |
@@ -66,6 +67,17 @@ pnpm dev                    # then open /admin and create the first admin user
 | Regenerate `src/payload-types.ts`        | `pnpm generate:types`         |
 
 **Push vs. migrations.** With `SITE_ENV=development`, Payload "pushes" schema changes straight into your local database while you work, so you do not need a migration for every experiment. Preview and production **never** push: their schema changes only through migrations in `src/migrations/`, committed with the code. Workflow for a schema change: edit the collection → `pnpm migrate:create <name>` → `pnpm generate:types` → commit both. Set `PAYLOAD_DB_PUSH=false` to work locally exactly like preview (migrations only); this avoids Payload's prompt when you run `pnpm migrate` against a database that was previously pushed.
+
+**The build reads the database.** Pages, the sitemap and child routes are statically generated at build time from published content and revalidated on every publish. `pnpm build` therefore needs a reachable, migrated database, and the server must run against the same database the build used.
+
+## End-to-end tests
+
+`pnpm test:e2e` runs Playwright with `@axe-core/playwright` (WCAG 2.x A/AA rules) against a production build:
+
+1. `scripts/e2e.mjs` wipes `DATABASE_URL_E2E`, applies migrations, seeds the 15 draft pages, builds and starts the server on port 3200.
+2. `tests/e2e/site.spec.ts` checks, in order: every route is 404 while draft; reserved and unknown routes are 404; publishing some pages shows exactly those in the menu, footer and sitemap (draft-leak checks); editor preview shows drafts with `noindex`/`no-store` and a stale draft cookie reveals nothing; with everything published every route is 200 with one h1 and no axe violations; the trip child route, `/next-trip` and the canonical rule; security headers; the admin page editor.
+
+The tests use the Chromium that matches `@playwright/test` (install it with `pnpm exec playwright install chromium` if you do not have it). CI (`.github/workflows/ci.yml`) runs lint, format check, typecheck, secret scan, unit, integration, build and e2e on every push and pull request, with throwaway secrets generated per run. It never deploys.
 
 ## CMS admin accounts
 

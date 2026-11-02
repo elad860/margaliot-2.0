@@ -1,0 +1,109 @@
+# Continuous integration (task T17). Runs checks and tests only.
+# It never deploys anything and needs no repository secrets: every secret it
+# uses is a throwaway value generated for this run.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: lint · typecheck · test · build · e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: margaliot_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      # Disposable CI databases on the service container above.
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/margaliot_ci
+      DATABASE_URL_TEST: postgres://postgres:postgres@localhost:5432/margaliot_test
+      DATABASE_URL_E2E: postgres://postgres:postgres@localhost:5432/margaliot_e2e
+      SITE_ENV: development
+      NEXT_PUBLIC_SITE_URL: http://localhost:3200
+      NEXT_TELEMETRY_DISABLED: '1'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Generate throwaway secrets for this run
+        run: |
+          echo "PAYLOAD_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+          echo "PREVIEW_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+          echo "E2E_PREVIEW_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+
+      - name: Create test databases
+        env:
+          PGPASSWORD: postgres
+        run: |
+          for db in margaliot_test margaliot_e2e; do
+            psql -h localhost -U postgres -c "create database $db"
+          done
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Lint (ESLint, logical CSS, design tokens)
+        run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Secret scan
+        run: pnpm check:secrets
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Integration tests (Payload + Postgres)
+        run: pnpm test:int
+
+      - name: Build (statically generated from the prepared e2e database)
+        run: |
+          pnpm e2e:prepare
+          pnpm e2e:build
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: End-to-end, draft-leak and accessibility tests
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
