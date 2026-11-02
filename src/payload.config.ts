@@ -19,6 +19,8 @@ import { Testimonials } from './cms/collections/Testimonials'
 import { Topics } from './cms/collections/Topics'
 import { Trips } from './cms/collections/Trips'
 import { Users } from './cms/collections/Users'
+import { Navigation } from './cms/globals/Navigation'
+import { SiteSettings } from './cms/globals/SiteSettings'
 import { formBuilder } from './cms/plugins/form-builder'
 import { getServerEnv } from './lib/env'
 
@@ -56,6 +58,7 @@ export default buildConfig({
   cors: [env.NEXT_PUBLIC_SITE_URL],
   csrf: [env.NEXT_PUBLIC_SITE_URL],
   collections: [Pages, Trips, Events, Parashot, Lessons, Topics, Testimonials, Team, Media, Users],
+  globals: [SiteSettings, Navigation],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {

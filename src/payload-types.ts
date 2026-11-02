@@ -107,8 +107,14 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+    navigation: Navigation;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -1241,6 +1247,207 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * פרטי קשר, רשתות חברתיות והמסע הקרוב. כל שדה שנשאר ריק פשוט לא מוצג באתר.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  organisationName?: string | null;
+  tagline?: string | null;
+  /**
+   * המסע שמוצג בכתובת הקבועה /next-trip. מוצג רק אם המסע מפורסם. אם ריק, העמוד מציג מצב "אין מסע פתוח".
+   */
+  nextTrip?: (number | null) | Trip;
+  /**
+   * התמונה שמופיעה בשיתוף קישור (וואטסאפ, פייסבוק) כשלעמוד אין תמונה משלו.
+   */
+  defaultSeoImage?: (number | null) | Media;
+  phones?:
+    | {
+        label?: string | null;
+        number: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * בפורמט בינלאומי, כולל קידומת מדינה. אם ריק, כפתורי הוואטסאפ לא יוצגו.
+   */
+  whatsappNumber?: string | null;
+  defaultWhatsappMessage?: string | null;
+  email?: string | null;
+  officeHours?: string | null;
+  /**
+   * קישור מלא שמתחיל ב-https://. רשת בלי קישור לא תוצג.
+   */
+  socials?: {
+    instagram?: string | null;
+    tiktok?: string | null;
+    youtube?: string | null;
+    whatsappCommunity?: string | null;
+  };
+  /**
+   * הפרטים מוצגים בהצהרת הנגישות.
+   */
+  accessibilityCoordinator?: {
+    name?: string | null;
+    phone?: string | null;
+    email?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * סדר פריטי התפריט, שמות הקבוצות ותיאורים קצרים. רק עמודים שפורסמו מופיעים בתפריט. שמות הלשוניות קבועים.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation".
+ */
+export interface Navigation {
+  id: number;
+  /**
+   * הלוגו תמיד בהתחלה וכפתור "המסע הקרוב" תמיד בסוף. כאן אפשר לשנות רק את סדר הקבוצות והקישורים הישירים.
+   */
+  headerItems?:
+    | {
+        type: 'group' | 'page';
+        group?: ('trips' | 'activities' | 'learning') | null;
+        page?: ('about' | 'contact') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * אם שדה ריק, מוצג השם שאושר.
+   */
+  groupLabels?: {
+    trips?: string | null;
+    activities?: string | null;
+    learning?: string | null;
+  };
+  /**
+   * שורה אחת שמוצגת מתחת לשם הלשונית בתפריט. מוצגת רק אם נכתבה.
+   */
+  tabDescriptions?: {
+    about?: string | null;
+    consultation?: string | null;
+    nextTrip?: string | null;
+    umanTrips?: string | null;
+    tzadikimIsrael?: string | null;
+    womensEvenings?: string | null;
+    channeling?: string | null;
+    toolsCourse?: string | null;
+    parasha?: string | null;
+    onlineClasses?: string | null;
+    contact?: string | null;
+  };
+  /**
+   * הכפתור מוביל תמיד לעמוד "המסע הקרוב", ומוצג רק כשהעמוד מפורסם.
+   */
+  headerCta?: {
+    label?: string | null;
+  };
+  footerLinks?:
+    | {
+        label: string;
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  organisationName?: T;
+  tagline?: T;
+  nextTrip?: T;
+  defaultSeoImage?: T;
+  phones?:
+    | T
+    | {
+        label?: T;
+        number?: T;
+        id?: T;
+      };
+  whatsappNumber?: T;
+  defaultWhatsappMessage?: T;
+  email?: T;
+  officeHours?: T;
+  socials?:
+    | T
+    | {
+        instagram?: T;
+        tiktok?: T;
+        youtube?: T;
+        whatsappCommunity?: T;
+      };
+  accessibilityCoordinator?:
+    | T
+    | {
+        name?: T;
+        phone?: T;
+        email?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation_select".
+ */
+export interface NavigationSelect<T extends boolean = true> {
+  headerItems?:
+    | T
+    | {
+        type?: T;
+        group?: T;
+        page?: T;
+        id?: T;
+      };
+  groupLabels?:
+    | T
+    | {
+        trips?: T;
+        activities?: T;
+        learning?: T;
+      };
+  tabDescriptions?:
+    | T
+    | {
+        about?: T;
+        consultation?: T;
+        nextTrip?: T;
+        umanTrips?: T;
+        tzadikimIsrael?: T;
+        womensEvenings?: T;
+        channeling?: T;
+        toolsCourse?: T;
+        parasha?: T;
+        onlineClasses?: T;
+        contact?: T;
+      };
+  headerCta?:
+    | T
+    | {
+        label?: T;
+      };
+  footerLinks?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
