@@ -4,6 +4,8 @@ import { DateText } from '@/components/content/DateText'
 import { NoTripState, TripDetails } from '@/components/content/TripDetails'
 import { getNextTrip, getTrips } from '@/lib/cms'
 import { childPath } from '@/lib/cms/paths'
+import { getServerEnv } from '@/lib/env'
+import { absoluteUrl } from '@/lib/seo/json-ld'
 import type { Page } from '@/payload-types'
 
 import { TemplateFrame } from './TemplateFrame'
@@ -18,7 +20,11 @@ export async function TripTemplate({ page, mode }: { page: Page; mode: 'next' | 
     const trip = await getNextTrip()
     return (
       <TemplateFrame page={page} template="trip">
-        {trip ? <TripDetails trip={trip} /> : <NoTripState />}
+        {trip ? (
+          <TripDetails trip={trip} url={absoluteUrl(getServerEnv().NEXT_PUBLIC_SITE_URL, '/next-trip')} />
+        ) : (
+          <NoTripState />
+        )}
       </TemplateFrame>
     )
   }

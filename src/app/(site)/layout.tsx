@@ -6,9 +6,11 @@ import { LivePreviewListener } from '@/components/cms/LivePreviewListener'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SkipLink } from '@/components/layout/SkipLink'
+import { JsonLdScript } from '@/components/seo/JsonLdScript'
 import { getNavigation, getSiteSettings } from '@/lib/cms'
 import { getContactDetails, getSocialLinks } from '@/lib/contact'
 import { getServerEnv, isProduction } from '@/lib/env'
+import { organizationJsonLd } from '@/lib/seo/json-ld'
 import { SITE_NAME } from '@/lib/seo/metadata'
 import '@/styles/theme.css'
 
@@ -33,6 +35,8 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
     getNavigation(),
     getSiteSettings(),
   ])
+  const socials = getSocialLinks(settings)
+  const siteUrl = getServerEnv().NEXT_PUBLIC_SITE_URL
   return (
     <html lang="he" dir="rtl">
       <body>
@@ -41,8 +45,15 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
         <main id="main" tabIndex={-1}>
           {children}
         </main>
-        <SiteFooter nav={nav} contact={getContactDetails(settings)} socials={getSocialLinks(settings)} />
-        {preview ? <LivePreviewListener serverURL={getServerEnv().NEXT_PUBLIC_SITE_URL} /> : null}
+        <SiteFooter nav={nav} contact={getContactDetails(settings)} socials={socials} />
+        <JsonLdScript
+          data={organizationJsonLd({
+            name: settings.organisationName?.trim() || SITE_NAME,
+            siteUrl,
+            sameAs: socials.map((social) => social.href),
+          })}
+        />
+        {preview ? <LivePreviewListener serverURL={siteUrl} /> : null}
       </body>
     </html>
   )

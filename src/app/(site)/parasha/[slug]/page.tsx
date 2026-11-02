@@ -4,11 +4,13 @@ import { notFound } from 'next/navigation'
 import { Breadcrumbs } from '@/components/content/Breadcrumbs'
 import { DateText } from '@/components/content/DateText'
 import { RichTextView } from '@/components/content/RichTextView'
+import { JsonLdScript } from '@/components/seo/JsonLdScript'
 import { getPublishedPageKeys, getPublishedSlugs, getViewer } from '@/lib/cms'
 import { loadParashaPage } from '@/lib/cms/child-pages'
 import { childPath } from '@/lib/cms/paths'
-import { isProduction } from '@/lib/env'
+import { getServerEnv, isProduction } from '@/lib/env'
 import { breadcrumbTrail } from '@/lib/navigation'
+import { breadcrumbJsonLd } from '@/lib/seo/json-ld'
 import { buildMetadata, mediaShareUrl } from '@/lib/seo/metadata'
 import { NOT_FOUND_METADATA, defaultShareImage } from '@/lib/seo/page-metadata'
 
@@ -37,9 +39,17 @@ export default async function ParashaItemPage({ params }: Props) {
   const parasha = await loadParashaPage((await params).slug)
   if (!parasha) notFound()
   const keys = await getPublishedPageKeys()
+  const trail = breadcrumbTrail(keys, 'parasha', { label: parasha.name })
   return (
     <>
-      <Breadcrumbs trail={breadcrumbTrail(keys, 'parasha', { label: parasha.name })} />
+      <Breadcrumbs trail={trail} />
+      <JsonLdScript
+        data={breadcrumbJsonLd(
+          trail,
+          getServerEnv().NEXT_PUBLIC_SITE_URL,
+          childPath('parashot', parasha.slug),
+        )}
+      />
       <article data-template="library">
         <h1>{parasha.name}</h1>
         <p>

@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { TripDetails } from '@/components/content/TripDetails'
 import { getNavigation, getNextTrip, getParashot } from '@/lib/cms'
 import { childPath } from '@/lib/cms/paths'
+import { getServerEnv } from '@/lib/env'
+import { absoluteUrl } from '@/lib/seo/json-ld'
 import type { Page } from '@/payload-types'
 
 import { TemplateFrame } from './TemplateFrame'
@@ -16,7 +18,9 @@ export async function HomeTemplate({ page }: { page: Page }) {
   const latest = parashot[0]
   return (
     <TemplateFrame page={page} template="home">
-      {trip ? <TripDetails trip={trip} /> : null}
+      {trip ? (
+        <TripDetails trip={trip} url={absoluteUrl(getServerEnv().NEXT_PUBLIC_SITE_URL, '/next-trip')} />
+      ) : null}
       {nav.publishedTabs.length > 0 ? (
         <ul data-region="tabs">
           {nav.publishedTabs.map((tab) => (

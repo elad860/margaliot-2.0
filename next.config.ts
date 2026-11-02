@@ -24,9 +24,12 @@ const nextConfig: NextConfig = {
     globalNotFound: true,
   },
   async headers() {
-    // The CMS admin and API are never indexed, in any environment.
-    // Site-wide non-production noindex is added in T15.
     const noindex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
+    // Every non-production environment is noindex on every response (ADR-0002, T15).
+    if (getServerEnv().SITE_ENV !== 'production') {
+      return [{ source: '/:path*', headers: noindex }]
+    }
+    // Production: the CMS admin and API are still never indexed.
     return [
       { source: '/admin/:path*', headers: noindex },
       { source: '/admin', headers: noindex },

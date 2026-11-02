@@ -3,12 +3,14 @@ import { notFound } from 'next/navigation'
 
 import { Breadcrumbs } from '@/components/content/Breadcrumbs'
 import { TripDetails } from '@/components/content/TripDetails'
+import { JsonLdScript } from '@/components/seo/JsonLdScript'
 import { getPublishedPageKeys, getPublishedSlugs, getSiteSettings, getViewer } from '@/lib/cms'
 import { loadTripPage } from '@/lib/cms/child-pages'
 import { childPath } from '@/lib/cms/paths'
 import { nextTripId } from '@/lib/cms/queries'
-import { isProduction } from '@/lib/env'
+import { getServerEnv, isProduction } from '@/lib/env'
 import { breadcrumbTrail } from '@/lib/navigation'
+import { absoluteUrl, breadcrumbJsonLd } from '@/lib/seo/json-ld'
 import { buildMetadata, mediaShareUrl, tripCanonicalPath } from '@/lib/seo/metadata'
 import { NOT_FOUND_METADATA, defaultShareImage } from '@/lib/seo/page-metadata'
 
@@ -47,11 +49,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function TripPage({ params }: Props) {
   const trip = await loadTripPage((await params).trip)
   if (!trip) notFound()
-  const keys = await getPublishedPageKeys()
+  const [keys, settings] = await Promise.all([getPublishedPageKeys(), getSiteSettings()])
+  const siteUrl = getServerEnv().NEXT_PUBLIC_SITE_URL
+  const path = childPath('trips', trip.slug)
+  const canonical = tripCanonicalPath({
+    tripId: trip.id,
+    tripPath: path,
+    nextTripId: nextTripId(settings),
+    nextTripPagePublished: keys.includes('nextTrip'),
+  })
+  const trail = breadcrumbTrail(keys, 'umanTrips', { label: trip.title })
   return (
     <>
-      <Breadcrumbs trail={breadcrumbTrail(keys, 'umanTrips', { label: trip.title })} />
-      <TripDetails trip={trip} titleAs="h1" />
+      <Breadcrumbs trail={trail} />
+      <JsonLdScript data={breadcrumbJsonLd(trail, siteUrl, path)} />
+      <TripDetails trip={trip} titleAs="h1" url={absoluteUrl(siteUrl, canonical)} />
     </>
   )
 }

@@ -4,11 +4,13 @@ import { notFound } from 'next/navigation'
 import { Breadcrumbs } from '@/components/content/Breadcrumbs'
 import { DateText } from '@/components/content/DateText'
 import { RichTextView } from '@/components/content/RichTextView'
+import { JsonLdScript } from '@/components/seo/JsonLdScript'
 import { getPublishedPageKeys, getPublishedSlugs, getViewer } from '@/lib/cms'
 import { loadLessonPage } from '@/lib/cms/child-pages'
 import { childPath } from '@/lib/cms/paths'
-import { isProduction } from '@/lib/env'
+import { getServerEnv, isProduction } from '@/lib/env'
 import { breadcrumbTrail } from '@/lib/navigation'
+import { breadcrumbJsonLd } from '@/lib/seo/json-ld'
 import { buildMetadata, mediaShareUrl } from '@/lib/seo/metadata'
 import { NOT_FOUND_METADATA, defaultShareImage } from '@/lib/seo/page-metadata'
 
@@ -37,9 +39,13 @@ export default async function LessonPage({ params }: Props) {
   const lesson = await loadLessonPage((await params).slug)
   if (!lesson) notFound()
   const keys = await getPublishedPageKeys()
+  const trail = breadcrumbTrail(keys, 'onlineClasses', { label: lesson.title })
   return (
     <>
-      <Breadcrumbs trail={breadcrumbTrail(keys, 'onlineClasses', { label: lesson.title })} />
+      <Breadcrumbs trail={trail} />
+      <JsonLdScript
+        data={breadcrumbJsonLd(trail, getServerEnv().NEXT_PUBLIC_SITE_URL, childPath('lessons', lesson.slug))}
+      />
       <article data-template="library">
         <h1>{lesson.title}</h1>
         {lesson.kind === 'live' && lesson.liveStart ? (

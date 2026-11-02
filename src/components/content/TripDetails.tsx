@@ -1,4 +1,8 @@
+import { JsonLdScript } from '@/components/seo/JsonLdScript'
 import { PLACEHOLDER } from '@/config/placeholder'
+import { SITE_NAME } from '@/lib/seo/metadata'
+import { touristTripJsonLd } from '@/lib/seo/json-ld'
+import { getServerEnv } from '@/lib/env'
 import type { Trip } from '@/payload-types'
 
 import { DateText } from './DateText'
@@ -9,7 +13,16 @@ import { RichTextView } from './RichTextView'
  * Trip details (unstyled stub, T14). Every part renders only when filled.
  * `titleAs` lets /next-trip keep the page name as its h1 (trip title becomes h2).
  */
-export function TripDetails({ trip, titleAs: Title = 'h2' }: { trip: Trip; titleAs?: 'h1' | 'h2' }) {
+export function TripDetails({
+  trip,
+  url,
+  titleAs: Title = 'h2',
+}: {
+  trip: Trip
+  /** Absolute canonical URL of the trip, for structured data. */
+  url: string
+  titleAs?: 'h1' | 'h2'
+}) {
   const Sub = Title === 'h1' ? 'h2' : 'h3'
   return (
     <article data-region="trip">
@@ -56,6 +69,15 @@ export function TripDetails({ trip, titleAs: Title = 'h2' }: { trip: Trip; title
         </dl>
       ) : null}
       <RegistrationAction registration={trip.registration} />
+      <JsonLdScript
+        data={touristTripJsonLd({
+          name: trip.title,
+          url,
+          description: trip.summary,
+          places: trip.tziunim?.map((tziun) => tziun.name),
+          provider: { name: SITE_NAME, url: new URL('/', getServerEnv().NEXT_PUBLIC_SITE_URL).toString() },
+        })}
+      />
     </article>
   )
 }
