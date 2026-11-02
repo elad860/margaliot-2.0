@@ -7,6 +7,8 @@ import { cache } from 'react'
 
 import type { SystemPageKey } from '@/config/site-map'
 
+import { buildNavigation } from '@/lib/navigation'
+
 import { getPayloadClient } from './payload'
 import * as q from './queries'
 import { getViewer } from './viewer'
@@ -55,3 +57,9 @@ export const getLesson = cache(async (slug: string) =>
 export const getPublishedSlugs = cache(async (collection: 'trips' | 'parashot' | 'lessons') =>
   q.findPublishedSlugs(await getPayloadClient(), collection),
 )
+
+/** Published-only navigation for header, mobile menu, footer, home cards, contact topics and sitemap (T13). */
+export const getNavigation = cache(async () => {
+  const [keys, settings] = await Promise.all([getPublishedPageKeys(), getNavigationGlobal()])
+  return buildNavigation(keys, settings)
+})

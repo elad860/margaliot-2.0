@@ -1,19 +1,10 @@
 import type { GlobalConfig } from 'payload'
 
+import { SOCIAL_NETWORKS } from '@/config/social'
 import { checkPhone, checkUrlOnHosts } from '@/lib/validators'
 
 import { anyone, isStaff } from '../access'
 import { revalidateGlobal } from '../hooks/revalidate'
-
-/** Social networks stored once and used everywhere (UX review F11). Each is optional. */
-export const SOCIAL_NETWORKS = [
-  { key: 'instagram', label: 'אינסטגרם', hosts: ['instagram.com'] },
-  { key: 'tiktok', label: 'טיקטוק', hosts: ['tiktok.com'] },
-  { key: 'youtube', label: 'יוטיוב', hosts: ['youtube.com', 'youtu.be'] },
-  { key: 'whatsappCommunity', label: 'קבוצת וואטסאפ', hosts: ['chat.whatsapp.com', 'whatsapp.com', 'wa.me'] },
-] as const
-
-export type SocialKey = (typeof SOCIAL_NETWORKS)[number]['key']
 
 /**
  * Site settings (task T10; ARCHITECTURE-PROPOSAL §8.4).
