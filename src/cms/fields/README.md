@@ -1,3 +1,3 @@
 # cms/fields
 
-Shared fields: slug, seo, registration, hebrewDate, link (T08–T09).
+Shared Payload fields: `slug` (T09), `registration` (T09), `variant` (T11), `link` (T11).

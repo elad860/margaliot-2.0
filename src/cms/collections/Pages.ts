@@ -1,8 +1,10 @@
 import type { Access, CollectionConfig } from 'payload'
 
+import { ALL_BLOCKS, allowedBlocksFor } from '@/blocks'
 import { SITE_MAP, type TemplateKey } from '@/config/site-map'
 
 import { isAdmin, isAdminUser, isStaff, publishedOrStaff } from '../access'
+import { enforceTemplateBlocks } from '../hooks/enforce-template-blocks'
 import { lockSystemPageFields } from '../hooks/lock-system-pages'
 
 const TEMPLATE_LABELS: Record<TemplateKey, string> = {
@@ -26,8 +28,10 @@ const deleteNonSystemPagesOnly: Access = ({ req: { user } }) =>
  * - title / slug / template / order come from the registry (hook) and are
  *   read-only in the admin. systemKey is fixed after creation.
  * - Anonymous reads return published pages only.
- * - The `layout` blocks field is added in T11 together with its first blocks: Payload's admin
- *   edit view crashes on a blocks field with an empty `blocks` list (verified on 3.92.1).
+ * - `layout` (T11): the page's blocks. Each template allows only its own blocks
+ *   (src/blocks/allowed.ts), enforced in the admin (filterOptions) and on every
+ *   save, drafts included (enforce-template-blocks hook). Legal pages have no
+ *   blocks; they use `body` + `lastUpdated` instead.
  * - Preview and revalidation come in T12.
  * - SEO fields (`meta`) come from @payloadcms/plugin-seo (payload.config.ts).
  */
@@ -55,7 +59,7 @@ export const Pages: CollectionConfig = {
     delete: deleteNonSystemPagesOnly,
   },
   hooks: {
-    beforeChange: [lockSystemPageFields],
+    beforeChange: [lockSystemPageFields, enforceTemplateBlocks],
   },
   fields: [
     {
@@ -74,6 +78,33 @@ export const Pages: CollectionConfig = {
         { name: 'subheading', type: 'textarea', label: 'טקסט משנה' },
         { name: 'image', type: 'upload', relationTo: 'media', label: 'תמונה' },
       ],
+    },
+    {
+      name: 'layout',
+      type: 'blocks',
+      label: 'תוכן העמוד',
+      labels: { singular: 'רכיב', plural: 'רכיבים' },
+      blocks: ALL_BLOCKS,
+      filterOptions: ({ data }) => [...allowedBlocksFor(data?.template)],
+      admin: {
+        condition: (data) => data?.template !== 'legal',
+        description: 'רכיבי התוכן של העמוד. כל תבנית מאפשרת רק את הרכיבים המתאימים לה.',
+      },
+    },
+    {
+      name: 'body',
+      type: 'richText',
+      label: 'נוסח העמוד',
+      admin: { condition: (data) => data?.template === 'legal' },
+    },
+    {
+      name: 'lastUpdated',
+      type: 'date',
+      label: 'עודכן לאחרונה',
+      admin: {
+        condition: (data) => data?.template === 'legal',
+        date: { pickerAppearance: 'dayOnly' },
+      },
     },
     {
       name: 'primaryAction',

@@ -161,6 +161,41 @@ export interface Page {
     image?: (number | null) | Media;
   };
   /**
+   * רכיבי התוכן של העמוד. כל תבנית מאפשרת רק את הרכיבים המתאימים לה.
+   */
+  layout?:
+    | (
+        | HeroBlock
+        | TextImageBlock
+        | CardsBlock
+        | TripSummaryBlock
+        | EventListBlock
+        | GalleryBlock
+        | VideoBlock
+        | TestimonialsBlock
+        | FAQBlock
+        | CTABlock
+        | FormBlock
+        | SocialBlock
+      )[]
+    | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  lastUpdated?: string | null;
+  /**
    * אם ריק, משתמשים בברירת המחדל של התבנית, או שהכפתור לא מוצג.
    */
   primaryAction?: {
@@ -262,6 +297,105 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock".
+ */
+export interface HeroBlock {
+  heading?: string | null;
+  subheading?: string | null;
+  image?: (number | null) | Media;
+  action?: {
+    label?: string | null;
+    /**
+     * כתובת באתר (מתחילה ב-/) או כתובת https:// מלאה.
+     */
+    href?: string | null;
+  };
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextImageBlock".
+ */
+export interface TextImageBlock {
+  heading?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (number | null) | Media;
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'textImage';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CardsBlock".
+ */
+export interface CardsBlock {
+  heading?: string | null;
+  intro?: string | null;
+  cards?:
+    | {
+        title: string;
+        text?: string | null;
+        image?: (number | null) | Media;
+        link?: {
+          label?: string | null;
+          /**
+           * כתובת באתר (מתחילה ב-/) או כתובת https:// מלאה.
+           */
+          href?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TripSummaryBlock".
+ */
+export interface TripSummaryBlock {
+  heading?: string | null;
+  source: 'nextTrip' | 'trip';
+  trip?: (number | null) | Trip;
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tripSummary';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -478,6 +612,221 @@ export interface Form {
   createdAt: string;
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EventListBlock".
+ */
+export interface EventListBlock {
+  heading?: string | null;
+  /**
+   * אם ריק, מוצגים המועדים של כל הפעילויות.
+   */
+  activityTypes?: ('tzadikimIsrael' | 'womensEvenings' | 'channeling' | 'toolsCourse')[] | null;
+  limit?: number | null;
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'eventList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock".
+ */
+export interface GalleryBlock {
+  heading?: string | null;
+  images: (number | Media)[];
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'gallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VideoBlock".
+ */
+export interface VideoBlock {
+  heading?: string | null;
+  url: string;
+  /**
+   * נדרש לנגישות: כך קוראי מסך מתארים את הסרטון.
+   */
+  title: string;
+  caption?: string | null;
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'video';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock".
+ */
+export interface TestimonialsBlock {
+  heading?: string | null;
+  source: 'featured' | 'activity' | 'selected';
+  activity?:
+    | (
+        | 'about'
+        | 'consultation'
+        | 'nextTrip'
+        | 'umanTrips'
+        | 'tzadikimIsrael'
+        | 'womensEvenings'
+        | 'channeling'
+        | 'toolsCourse'
+        | 'parasha'
+        | 'onlineClasses'
+        | 'contact'
+      )
+    | null;
+  items?: (number | Testimonial)[] | null;
+  limit?: number | null;
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'testimonials';
+}
+/**
+ * המלצות אמיתיות בלבד, באישור האדם שכתב אותן.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  quote: string;
+  /**
+   * כפי שהאדם הסכים שיופיע.
+   */
+  attribution?: string | null;
+  activities?:
+    | (
+        | 'about'
+        | 'consultation'
+        | 'nextTrip'
+        | 'umanTrips'
+        | 'tzadikimIsrael'
+        | 'womensEvenings'
+        | 'channeling'
+        | 'toolsCourse'
+        | 'parasha'
+        | 'onlineClasses'
+        | 'contact'
+      )[]
+    | null;
+  featured?: boolean | null;
+  /**
+   * חובה לפני פרסום.
+   */
+  consentConfirmed?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock".
+ */
+export interface FAQBlock {
+  heading?: string | null;
+  items?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CTABlock".
+ */
+export interface CTABlock {
+  heading?: string | null;
+  text?: string | null;
+  link?: {
+    label?: string | null;
+    /**
+     * כתובת באתר (מתחילה ב-/) או כתובת https:// מלאה.
+     */
+    href?: string | null;
+  };
+  /**
+   * לאן מוביל כפתור ההרשמה. ברירת המחדל: ללא כפתור.
+   */
+  registration: {
+    mode: 'none' | 'form' | 'whatsapp' | 'external' | 'onsite';
+    /**
+     * אם ריק, משתמשים בטקסט ברירת המחדל של העיצוב.
+     */
+    label?: string | null;
+    form?: (number | null) | Form;
+    /**
+     * מספר הוואטסאפ נלקח מהגדרות האתר. אם לא הוגדר מספר, הכפתור לא יוצג.
+     */
+    whatsappMessage?: string | null;
+    externalUrl?: string | null;
+  };
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlock".
+ */
+export interface FormBlock {
+  heading?: string | null;
+  intro?: string | null;
+  form: number | Form;
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'form';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SocialBlock".
+ */
+export interface SocialBlock {
+  /**
+   * הקישורים עצמם נלקחים מהגדרות האתר.
+   */
+  heading?: string | null;
+  /**
+   * אופן התצוגה בלבד. שינוי הפריסה אינו משנה את התוכן.
+   */
+  variant: 'default';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'social';
+}
+/**
  * מועדים של קברי צדיקים בארץ, ערבי נשים, תקשור בציבור וקורס הארת הכלים.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -611,43 +960,6 @@ export interface Topic {
   name: string;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * המלצות אמיתיות בלבד, באישור האדם שכתב אותן.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials".
- */
-export interface Testimonial {
-  id: number;
-  quote: string;
-  /**
-   * כפי שהאדם הסכים שיופיע.
-   */
-  attribution?: string | null;
-  activities?:
-    | (
-        | 'about'
-        | 'consultation'
-        | 'nextTrip'
-        | 'umanTrips'
-        | 'tzadikimIsrael'
-        | 'womensEvenings'
-        | 'channeling'
-        | 'toolsCourse'
-        | 'parasha'
-        | 'onlineClasses'
-        | 'contact'
-      )[]
-    | null;
-  featured?: boolean | null;
-  /**
-   * חובה לפני פרסום.
-   */
-  consentConfirmed?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -824,6 +1136,24 @@ export interface PagesSelect<T extends boolean = true> {
         subheading?: T;
         image?: T;
       };
+  layout?:
+    | T
+    | {
+        hero?: T | HeroBlockSelect<T>;
+        textImage?: T | TextImageBlockSelect<T>;
+        cards?: T | CardsBlockSelect<T>;
+        tripSummary?: T | TripSummaryBlockSelect<T>;
+        eventList?: T | EventListBlockSelect<T>;
+        gallery?: T | GalleryBlockSelect<T>;
+        video?: T | VideoBlockSelect<T>;
+        testimonials?: T | TestimonialsBlockSelect<T>;
+        faq?: T | FAQBlockSelect<T>;
+        cta?: T | CTABlockSelect<T>;
+        form?: T | FormBlockSelect<T>;
+        social?: T | SocialBlockSelect<T>;
+      };
+  body?: T;
+  lastUpdated?: T;
   primaryAction?:
     | T
     | {
@@ -845,6 +1175,188 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock_select".
+ */
+export interface HeroBlockSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  image?: T;
+  action?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+      };
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextImageBlock_select".
+ */
+export interface TextImageBlockSelect<T extends boolean = true> {
+  heading?: T;
+  body?: T;
+  image?: T;
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CardsBlock_select".
+ */
+export interface CardsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  intro?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        image?: T;
+        link?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+        id?: T;
+      };
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TripSummaryBlock_select".
+ */
+export interface TripSummaryBlockSelect<T extends boolean = true> {
+  heading?: T;
+  source?: T;
+  trip?: T;
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EventListBlock_select".
+ */
+export interface EventListBlockSelect<T extends boolean = true> {
+  heading?: T;
+  activityTypes?: T;
+  limit?: T;
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock_select".
+ */
+export interface GalleryBlockSelect<T extends boolean = true> {
+  heading?: T;
+  images?: T;
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VideoBlock_select".
+ */
+export interface VideoBlockSelect<T extends boolean = true> {
+  heading?: T;
+  url?: T;
+  title?: T;
+  caption?: T;
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TestimonialsBlock_select".
+ */
+export interface TestimonialsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  source?: T;
+  activity?: T;
+  items?: T;
+  limit?: T;
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock_select".
+ */
+export interface FAQBlockSelect<T extends boolean = true> {
+  heading?: T;
+  items?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CTABlock_select".
+ */
+export interface CTABlockSelect<T extends boolean = true> {
+  heading?: T;
+  text?: T;
+  link?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+      };
+  registration?:
+    | T
+    | {
+        mode?: T;
+        label?: T;
+        form?: T;
+        whatsappMessage?: T;
+        externalUrl?: T;
+      };
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlock_select".
+ */
+export interface FormBlockSelect<T extends boolean = true> {
+  heading?: T;
+  intro?: T;
+  form?: T;
+  variant?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SocialBlock_select".
+ */
+export interface SocialBlockSelect<T extends boolean = true> {
+  heading?: T;
+  variant?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
