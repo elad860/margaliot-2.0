@@ -12,7 +12,10 @@ Goal: a high-quality, extensible skeleton: home page, all 11 tabs as separate pa
 ## Design quality is a core requirement
 
 Margaliot 2.0 must look and feel premium from the first version — not a generic template and not a technical skeleton to be re-skinned later. Architecture and design are planned together:
-- No production UI is built before the owner approves a visual direction.
+- **Two design phases (owner decision, 2026-11-02):**
+  - **Phase 1 (now):** build the full functional skeleton with a basic, clean, high-quality look derived from the existing brand colours (navy/turquoise/gold) — restrained and neutral, not one of the three proposed directions.
+  - **Phase 2 (later):** full Premium upgrade with `frontend-design` and `senior-ui-design-architect`, from the owner's guidelines and inspiration images — layouts, components and motion, not only colours and fonts.
+  - Phase 1 must therefore keep content, logic and design fully separate (tokens, layout/variant layer, motion module) so Phase 2 does not rewrite the system, and must ship visual-regression and functional tests that catch breakage.
 - One shared Design System (tokens + components + page templates) is used by all pages. Within it, each template and later each tab gets its own fitting character — never 11 identical generic pages.
 - Colours and fonts are grounded in the existing Margaliot brand (logo: Star of David with a diamond, "קהילה שהיא בית"; blue/turquoise and gold palettes), never arbitrary.
 - Inspiration sites are for content ideas only; their designs are never copied.

@@ -4,6 +4,8 @@
 - **Author:** system-architect, 2026-11-02
 - **Implements:** [ARCHITECTURE-PROPOSAL.md](ARCHITECTURE-PROPOSAL.md), ADR-0001 to ADR-0005 (once approved)
 
+> **Owner decision 2026-11-02 — overrides gate G2 below:** the skeleton is built now with a *basic, clean* look derived from the existing brand colours (Phase 1). UI tasks T20–T36 may proceed in Phase 1 using basic token values; the Premium visual direction (D1) and full Design System come in Phase 2 and replace the token values and component/layout variants without rewriting the system. G1 is open: stack, routes and navigation (3 groups + 2 direct links) are approved; V1.1 is the basis for the skeleton only.
+
 ## Gates
 
 | Gate | Opens when | Unlocks |
