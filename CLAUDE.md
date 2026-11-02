@@ -124,4 +124,12 @@ Standard flow for a task: system-architect + senior-ui-design-architect (plan, A
 
 ## Commands
 
-To be filled in once the stack is approved (install, dev, lint, typecheck, test, build).
+- Install: `pnpm install` (Node >= 22.23.4, pnpm 10)
+- Database (local): `pnpm db:up` (Docker Postgres 17), then `pnpm migrate`, then `pnpm seed` (creates the 15 system pages as drafts; never seeds users)
+- Dev: `pnpm dev` — site on `/`, CMS on `/admin` (first visit creates the first admin)
+- New migration: `pnpm migrate:create <name>`
+- Lint: `pnpm lint` (includes logical-CSS and no-colour-literal checks)
+- Typecheck: `pnpm typecheck`
+- Tests: `pnpm test`; integration: `pnpm test:int` (needs `DATABASE_URL_TEST`, a throwaway database wiped on each run)
+- Build: `pnpm build`
+- Secret scan before every push: `pnpm check:secrets`
