@@ -19,6 +19,16 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Do not auto-generate AGENTS.md; project agent rules live in CLAUDE.md.
   agentRules: false,
+  async headers() {
+    // The CMS admin and API are never indexed, in any environment.
+    // Site-wide non-production noindex is added in T15.
+    const noindex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
+    return [
+      { source: '/admin/:path*', headers: noindex },
+      { source: '/admin', headers: noindex },
+      { source: '/api/:path*', headers: noindex },
+    ]
+  },
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })

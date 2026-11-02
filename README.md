@@ -21,6 +21,7 @@ Stack (ADR-0001, approved 2026-11-02): Next.js 16.4 (App Router) + Payload CMS 3
 | Typecheck                   | `pnpm typecheck`                                                               |
 | Format                      | `pnpm format` / `pnpm format:check`                                            |
 | Unit tests (Vitest)         | `pnpm test` (watch: `pnpm test:watch`)                                         |
+| Integration tests (DB)      | `pnpm test:int` (needs `DATABASE_URL_TEST`, a disposable database)             |
 | Build                       | `pnpm build`                                                                   |
 | Generate Payload types      | `pnpm generate:types`                                                          |
 | Regenerate admin import map | `pnpm generate:importmap`                                                      |
@@ -64,6 +65,13 @@ pnpm dev                    # then open /admin and create the first admin user
 | Regenerate `src/payload-types.ts`        | `pnpm generate:types`         |
 
 **Push vs. migrations.** With `SITE_ENV=development`, Payload "pushes" schema changes straight into your local database while you work, so you do not need a migration for every experiment. Preview and production **never** push: their schema changes only through migrations in `src/migrations/`, committed with the code. Workflow for a schema change: edit the collection → `pnpm migrate:create <name>` → `pnpm generate:types` → commit both. Set `PAYLOAD_DB_PUSH=false` to work locally exactly like preview (migrations only); this avoids Payload's prompt when you run `pnpm migrate` against a database that was previously pushed.
+
+## CMS admin accounts
+
+- There are **no default accounts or passwords**. On a fresh database, open `/admin`: Payload shows _create first user_. That first account is always an **admin**.
+- Admins add further people under _משתמשים_ with the role **admin** (everything, including users) or **editor** (content and media only). Everyone has their own account; never share one.
+- Passwords: at least 12 characters, not a common password, not containing the e-mail name. Five wrong attempts lock the account for 15 minutes (an admin can unlock it).
+- The admin is Hebrew and right-to-left, never indexed, and GraphQL is off. Two-factor login is not built in yet; see `docs/architecture/2fa-evaluation.md`.
 
 ## Styling and design tokens
 
