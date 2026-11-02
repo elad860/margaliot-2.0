@@ -2,6 +2,7 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import type { Field } from 'payload'
 
 import { anyone, isAdmin, isStaff, nobody } from '../access'
+import { protectSubmissions } from '../hooks/protect-submissions'
 
 /**
  * Forms and form submissions (@payloadcms/plugin-form-builder; ADR-0001, ADR-0004).
@@ -10,7 +11,8 @@ import { anyone, isAdmin, isStaff, nobody } from '../access'
  *   owner decides where submissions go (OPEN-DECISIONS #5): the `emails`
  *   field is removed from forms and `beforeEmail` drops anything left.
  * - Submissions are readable by staff only, never editable, deletable by admins.
- * - Spam protection and server-side validation of submissions: T16.
+ * - Public submissions pass a rate limit, a honeypot, server-side validation
+ *   against the form and Cloudflare Turnstile (hooks/protect-submissions.ts, T16).
  * - Payment fields are disabled (no payments in Phase A).
  */
 export const formBuilder = formBuilderPlugin({
@@ -50,6 +52,9 @@ export const formBuilder = formBuilderPlugin({
       read: isStaff,
       update: nobody,
       delete: isAdmin,
+    },
+    hooks: {
+      beforeOperation: [protectSubmissions],
     },
   },
 })

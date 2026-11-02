@@ -20,3 +20,5 @@ if (testUrl === process.env.DATABASE_URL) {
 process.env.DATABASE_URL = testUrl
 process.env.SITE_ENV = 'development'
 process.env.PAYLOAD_DB_PUSH = 'false' // exercise the committed migrations, not schema push
+// A fake Turnstile secret so the verification path runs; tests stub fetch, nothing reaches Cloudflare.
+process.env.TURNSTILE_SECRET_KEY = 'test-only-fake-turnstile-secret'

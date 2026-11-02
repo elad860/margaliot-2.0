@@ -20,6 +20,12 @@ export type ServerEnv = {
   BLOB_READ_WRITE_TOKEN: string | undefined
   /** Shared secret for the preview route (T12). Required outside development. */
   PREVIEW_SECRET: string | undefined
+  /**
+   * Cloudflare Turnstile secret (T16). Optional: without it, anonymous form
+   * submissions are rejected (fail closed). Forms stay off publicly until the
+   * privacy page and the submission destination are approved anyway.
+   */
+  TURNSTILE_SECRET_KEY: string | undefined
 }
 
 type EnvSource = Record<string, string | undefined>
@@ -99,6 +105,7 @@ export function validateEnv(source: EnvSource): ServerEnv {
     NEXT_PUBLIC_SITE_URL: NEXT_PUBLIC_SITE_URL!,
     BLOB_READ_WRITE_TOKEN,
     PREVIEW_SECRET,
+    TURNSTILE_SECRET_KEY: read(source, 'TURNSTILE_SECRET_KEY'),
   }
 }
 
